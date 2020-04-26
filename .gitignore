@@ -1,3 +1,3 @@
-data/bitstamp.csv
-data/coinbase.csv
+static_test_data/bitstamp.csv
+static_test_data/coinbase.csv
 .idea/

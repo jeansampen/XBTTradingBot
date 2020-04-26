@@ -3,8 +3,8 @@ import plotly.graph_objects as go
 import pandas as pd
 from datetime import datetime
 
-print('Loading data from CSV')
-df = pd.read_csv('data/bitstamp.csv')[-1000:]
+print('Loading static_test_data from CSV')
+df = pd.read_csv('static_test_data/bitstamp.csv')[-1000:]
 
 
 print("Creating Figure")

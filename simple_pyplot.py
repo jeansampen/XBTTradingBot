@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-data = pd.read_csv("data/small_version.csv")
+data = pd.read_csv("static_test_data/small_version.csv")
 print(data.head())
 
 
