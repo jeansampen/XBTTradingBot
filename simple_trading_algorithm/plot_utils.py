@@ -1,8 +1,11 @@
+import datetime
+
 import plotly.graph_objects as go
 import pandas as pd
 
 
 df = pd.read_csv('../bitmex_api_data/trade_bucketed.csv')
+df['timestamp'] = df['timestamp'].map(pd.to_datetime)
 
 
 def get_data_for_index(index):
@@ -16,7 +19,8 @@ def get_starting_point():
 
 selected_column = 'low'
 marker_size = 30
-offset = 10
+price_offset = 10
+time_offset = datetime.timedelta(minutes=5)
 line_width = 2
 start_index = get_data_for_index(0)[0]
 end_index = get_data_for_index(999)[0]
@@ -55,8 +59,9 @@ def add_buy_triangle_to_figure_for_index(fig, index):
 
 def add_starting_point_triangle_to_figure(fig):
     [starting_timestamp, starting_price] = get_starting_point()
+    print(type(starting_timestamp))
     add_triangle_to_figure(fig=fig,
-                           position_x=starting_timestamp,
+                           position_x=starting_timestamp - time_offset,
                            position_y=starting_price,
                            color='Blue',
                            direction='triangle-right',
@@ -68,7 +73,7 @@ def add_starting_point_triangle_to_figure(fig):
 def add_sell_triangle_to_figure(fig, timestamp, price):
     add_triangle_to_figure(fig=fig,
                            position_x=timestamp,
-                           position_y=price + offset,
+                           position_y=price + price_offset,
                            color='Red',
                            direction='triangle-down',
                            size=marker_size,
@@ -79,7 +84,7 @@ def add_sell_triangle_to_figure(fig, timestamp, price):
 def add_buy_triangle_to_figure(fig, timestamp, price):
     add_triangle_to_figure(fig=fig,
                            position_x=timestamp,
-                           position_y=price - offset,
+                           position_y=price - price_offset,
                            color='Green',
                            direction='triangle-up',
                            size=marker_size,
