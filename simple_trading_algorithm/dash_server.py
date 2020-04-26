@@ -4,7 +4,7 @@ import time
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from simple_trading_algorithm.plot_figures import get_figure
+from simple_trading_algorithm.plot_utils import get_figure
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 

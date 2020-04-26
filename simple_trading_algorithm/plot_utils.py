@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 
-df = pd.read_csv('bitmex_api_data/trade_bucketed.csv')
+df = pd.read_csv('../bitmex_api_data/trade_bucketed.csv')
 
 
 def get_data_for_index(index):
@@ -42,29 +42,45 @@ def get_figure():
 
 
 def add_sell_triangle_to_figure_for_index(fig, index):
-    [x, y] = get_data_for_index(index)
-    add_sell_triangle_to_figure(fig, x, y)
+    [timestamp, price] = get_data_for_index(index)
+    add_sell_triangle_to_figure(fig, timestamp, price)
 
 
 def add_buy_triangle_to_figure_for_index(fig, index):
-    [x, y] = get_data_for_index(index)
-    add_buy_triangle_to_figure(fig, x, y)
+    [timestamp, price] = get_data_for_index(index)
+    add_buy_triangle_to_figure(fig, timestamp, price)
 
 
-def add_sell_triangle_to_figure(fig, position_x, position_y):
-    add_triangle_to_figure(fig, position_x, position_y + offset, color='Red', direction='triangle-down', size=marker_size)
+def add_sell_triangle_to_figure(fig, timestamp, price):
+    add_triangle_to_figure(fig=fig,
+                           position_x=timestamp,
+                           position_y=price + offset,
+                           color='Red',
+                           direction='triangle-down',
+                           size=marker_size,
+                           text=price,
+                           text_position='top center')
 
 
-def add_buy_triangle_to_figure(fig, position_x, position_y):
-    add_triangle_to_figure(fig, position_x, position_y - offset, color='Green', direction='triangle-up', size=marker_size)
+def add_buy_triangle_to_figure(fig, timestamp, price):
+    add_triangle_to_figure(fig=fig,
+                           position_x=timestamp,
+                           position_y=price - offset,
+                           color='Green',
+                           direction='triangle-up',
+                           size=marker_size,
+                           text=price,
+                           text_position='bottom center')
 
 
-def add_triangle_to_figure(fig, position_x, position_y, color, direction, size):
+def add_triangle_to_figure(fig, position_x, position_y, color, direction, size, text, text_position):
     fig.add_trace(
         go.Scatter(
-            mode='markers',
+            mode='markers+text',
             x=[position_x],
             y=[position_y],
+            text=[text],
+            textposition=text_position,
             marker=dict(
                 symbol=direction,
                 color=color,
@@ -77,6 +93,7 @@ def add_triangle_to_figure(fig, position_x, position_y, color, direction, size):
             showlegend=False
         )
     )
+
 
 
 def add_buy_line_to_figure(fig, height):
@@ -104,25 +121,3 @@ def add_horizontal_line_to_figure(fig, height, color):
                 dash='dashdot'
             )
         ))
-
-
-
-
-index_1 = 17
-index_2 = 100
-
-figure = get_figure()
-add_buy_triangle_to_figure_for_index(figure, index_1)
-add_sell_triangle_to_figure_for_index(figure, index_2)
-
-add_sell_line_to_figure(figure, 7600)
-add_buy_line_to_figure(figure, 7500)
-
-
-figure.show()
-
-
-
-
-
-
