@@ -4,10 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 print('Loading data from CSV')
-df = pd.read_csv('data/bitstamp.csv')[-10000:]
-
-
-
+df = pd.read_csv('data/bitstamp.csv')[-1000:]
 
 
 print("Creating Figure")
