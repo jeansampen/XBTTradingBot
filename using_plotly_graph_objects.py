@@ -15,15 +15,31 @@ fig = go.Figure(data=[go.Candlestick(x=df['timestamp'],
 
 print('Showing....')
 
+index = 17
+line_offest = 1
+x0 = df.loc[index - line_offest, 'timestamp']
+x1 = df.loc[index + line_offest, 'timestamp']
+y = df.loc[index, 'open']
+
+print('x0 = ', x0)
+print('x1 = ', x1)
+print('y = ', y)
+
+
 fig.update_layout(
     title='The Great Recession',
     yaxis_title='AAPL Stock',
-    shapes = [dict(
-        x0='2020-04-26T13:10:00.000Z', x1='2020-04-26T13:11:00.000Z', y0=0, y1=1, xref='x', yref='paper',
-        line_width=2)],
-    annotations=[dict(
-        x='2020-04-26T13:10:00.000Z', y=0.05, xref='x', yref='paper',
-        showarrow=False, xanchor='left', text='Increase Period Begins')]
+    shapes=[
+        dict(type="line",
+            x0=x0,
+            y0=y,
+            x1=x1,
+            y1=y,
+            line=dict(
+                color="Black",
+                width=4,
+                dash="dashdot",
+            ))],
 )
 
 fig.show()
