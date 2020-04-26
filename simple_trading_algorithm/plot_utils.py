@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 
-df = pd.read_csv('../bitmex_api_data/trade_bucketed.csv')
+df = pd.read_csv('bitmex_api_data/trade_bucketed.csv')
 df['timestamp'] = df['timestamp'].map(pd.to_datetime)
 
 
@@ -27,9 +27,6 @@ end_index = get_data_for_index(999)[0]
 
 
 def get_figure():
-    print('Loading static_test_data from CSV')
-
-    print("Creating Figure")
     fig = go.Figure(data=[go.Candlestick(x=df['timestamp'],
                                          open=df['open'],
                                          high=df['high'],
@@ -59,7 +56,6 @@ def add_buy_triangle_to_figure_for_index(fig, index):
 
 def add_starting_point_triangle_to_figure(fig):
     [starting_timestamp, starting_price] = get_starting_point()
-    print(type(starting_timestamp))
     add_triangle_to_figure(fig=fig,
                            position_x=starting_timestamp - time_offset,
                            position_y=starting_price,
@@ -112,11 +108,11 @@ def add_triangle_to_figure(fig, position_x, position_y, color, direction, size, 
 
 
 def add_buy_line_to_figure(fig, height):
-    add_horizontal_line_to_figure(fig, height, color='Green')
+    add_horizontal_line_to_figure(fig, height, color='Red')
 
 
 def add_sell_line_to_figure(fig, height):
-    add_horizontal_line_to_figure(fig, height, color='Red')
+    add_horizontal_line_to_figure(fig, height, color='Green')
 
 
 
@@ -149,7 +145,7 @@ def add_horizontal_line_to_figure(fig, price_level, color):
 
 
 
-def init_order_levels_for_figure(fig, delta, num_of_layers):
+def add_order_levels_to_figure(fig, delta, num_of_layers):
     starting_price = get_starting_point()[1]
     for i in range(1, num_of_layers + 1):
         add_buy_line_to_figure(fig=fig, height=starting_price + i * delta)
