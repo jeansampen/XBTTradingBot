@@ -20,7 +20,14 @@ app.layout = html.Div(children=[
         Dash: A web application framework for Python.
     '''),
 
-    html.Button('Click Me', id='my-button'),
+    dcc.Interval(
+        id='simulation-step-interval',
+        disabled=True,
+        interval=1000,
+        max_intervals=9
+    ),
+
+    html.Button('Start Simulation', id='start-simulation-button'),
     html.Div(id='my-div'),
     dcc.Graph(
         id='candlestick-graph',
@@ -34,13 +41,41 @@ app.layout = html.Div(children=[
 
 @app.callback(
     Output(component_id='candlestick-graph', component_property='figure'),
-    [Input('my-button', 'n_clicks')]
+    [
+        Input('simulation-step-interval', 'n_intervals')
+    ]
 )
-def on_click(n_clicks):
-    if n_clicks is not None and n_clicks > 0:
-        add_order_levels_to_figure(fig=figure, delta=25, num_of_layers=5)
+def on_start_simulation_click(n_intervals):
+    print('Interval callback invoked')
+    if n_intervals is not None and 10 > n_intervals > 0:
+        print('Running a step {} out of 9 of simulation'.format(n_intervals))
+        index = 100 * n_intervals
+        add_buy_triangle_to_figure_for_index(figure, index)
+    elif n_intervals is None:
+        print('This is the initial load. Not executing as we are waiting for a button click')
+    else:
+        print('We have already gone through 9 steps. No more steps included')
 
     return figure
+
+
+@app.callback(
+    Output(component_id='simulation-step-interval', component_property='disabled'),
+    [
+        Input('start-simulation-button', 'n_clicks')
+    ]
+)
+def on_start_simulation_click(n_clicks):
+    print('Start simulation callback invoked')
+    if n_clicks is not None and n_clicks == 1:
+        print('Starting the simulation')
+        return False
+    elif n_clicks is None:
+        print('Page just loaded for the first time. Waiting for first button click')
+        return True
+    else:
+        print('Simulation was already executed. Not running a new simulation')
+        return True
 
 
 if __name__ == '__main__':
