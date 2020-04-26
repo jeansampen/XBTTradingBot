@@ -10,6 +10,9 @@ def get_data_for_index(index):
     res_y = df.loc[index, selected_column]
     return [res_x, res_y]
 
+def get_starting_point():
+    return get_data_for_index(0)
+
 
 selected_column = 'low'
 marker_size = 30
@@ -40,7 +43,6 @@ def get_figure():
 
 
 
-
 def add_sell_triangle_to_figure_for_index(fig, index):
     [timestamp, price] = get_data_for_index(index)
     add_sell_triangle_to_figure(fig, timestamp, price)
@@ -51,6 +53,18 @@ def add_buy_triangle_to_figure_for_index(fig, index):
     add_buy_triangle_to_figure(fig, timestamp, price)
 
 
+def add_starting_point_triangle_to_figure(fig):
+    [starting_timestamp, starting_price] = get_starting_point()
+    add_triangle_to_figure(fig=fig,
+                           position_x=starting_timestamp,
+                           position_y=starting_price,
+                           color='Blue',
+                           direction='triangle-right',
+                           size=marker_size,
+                           text='Starting at ' + str(starting_price),
+                           text_position='top center')
+
+
 def add_sell_triangle_to_figure(fig, timestamp, price):
     add_triangle_to_figure(fig=fig,
                            position_x=timestamp,
@@ -58,7 +72,7 @@ def add_sell_triangle_to_figure(fig, timestamp, price):
                            color='Red',
                            direction='triangle-down',
                            size=marker_size,
-                           text=price,
+                           text='Sell at ' + str(price),
                            text_position='top center')
 
 
@@ -69,7 +83,7 @@ def add_buy_triangle_to_figure(fig, timestamp, price):
                            color='Green',
                            direction='triangle-up',
                            size=marker_size,
-                           text=price,
+                           text='Buy at ' + str(price),
                            text_position='bottom center')
 
 
@@ -84,11 +98,7 @@ def add_triangle_to_figure(fig, position_x, position_y, color, direction, size, 
             marker=dict(
                 symbol=direction,
                 color=color,
-                size=size,
-                line=dict(
-                    color='MediumPurple',
-                    width=2
-                )
+                size=size
             ),
             showlegend=False
         )
