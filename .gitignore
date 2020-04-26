@@ -1,2 +1,3 @@
-data/
+data/bitstamp.csv
+data/coinbase.csv
 .idea/
