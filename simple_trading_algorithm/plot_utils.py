@@ -112,27 +112,48 @@ def add_triangle_to_figure(fig, position_x, position_y, color, direction, size, 
 
 
 def add_buy_line_to_figure(fig, height):
-    add_horizontal_line_to_figure(fig, height, color='Red')
-
-
-def add_sell_line_to_figure(fig, height):
     add_horizontal_line_to_figure(fig, height, color='Green')
 
 
+def add_sell_line_to_figure(fig, height):
+    add_horizontal_line_to_figure(fig, height, color='Red')
 
-def add_horizontal_line_to_figure(fig, height, color):
+
+
+def add_horizontal_line_to_figure(fig, price_level, color):
 
     fig.add_shape(
         # Line Vertical
         dict(
             type="line",
             x0=start_index,
-            y0=height,
+            y0=price_level,
             x1=end_index,
-            y1=height,
+            y1=price_level,
             line=dict(
                 color=color,
                 width=line_width,
                 dash='dashdot'
             )
         ))
+
+    startin_timestamp = get_starting_point()[0]
+    add_triangle_to_figure(fig=fig,
+                           position_x=startin_timestamp - time_offset,
+                           position_y=price_level,
+                           color=color,
+                           direction='triangle-right',
+                           size=marker_size,
+                           text='Price Level ' + str(price_level),
+                           text_position='top center')
+
+
+
+def init_order_levels_for_figure(fig, delta, num_of_layers):
+    starting_price = get_starting_point()[1]
+    for i in range(1, num_of_layers + 1):
+        add_buy_line_to_figure(fig=fig, height=starting_price + i * delta)
+        add_sell_line_to_figure(fig=fig, height=starting_price - i * delta)
+
+
+
