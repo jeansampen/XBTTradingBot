@@ -10,14 +10,14 @@ import matplotlib.dates as mpl_dates
 plt.style.use('ggplot')
 
 # Extracting Data for plotting
-data = pd.read_csv('static_test_data/data.csv')
+data = pd.read_csv('../static_test_data/data.csv')
 ohlc = data.loc[:, ['Date', 'Open', 'High', 'Low', 'Close']]
 ohlc['Date'] = pd.to_datetime(ohlc['Date'])
 ohlc['Date'] = ohlc['Date'].apply(mpl_dates.date2num)
 ohlc = ohlc.astype(float)
 
 
-bitcoin = pd.read_csv('static_test_data/small_version.csv').loc[:, ['Date', 'Open', 'High', 'Low', 'Close']]
+bitcoin = pd.read_csv('../static_test_data/small_version.csv').loc[:, ['Date', 'Open', 'High', 'Low', 'Close']]
 bitcoin['Date'] = bitcoin['Date'].map(datetime.fromtimestamp)
 
 # Creating Subplots

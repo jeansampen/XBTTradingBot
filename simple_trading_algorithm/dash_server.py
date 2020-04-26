@@ -4,7 +4,7 @@ import time
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from using_plotly_graph_objects import get_figure, update_figure
+from simple_trading_algorithm.plot_figures import get_figure, update_figure
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
