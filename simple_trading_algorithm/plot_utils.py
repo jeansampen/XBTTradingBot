@@ -18,7 +18,7 @@ def get_starting_point():
 
 
 selected_column = 'low'
-marker_size = 30
+marker_size = 10
 price_offset = 10
 time_offset = datetime.timedelta(minutes=5)
 line_width = 2
@@ -62,7 +62,7 @@ def add_starting_point_triangle_to_figure(fig):
                            color='Blue',
                            direction='triangle-right',
                            size=marker_size,
-                           text='Starting at ' + str(starting_price),
+                           text=starting_price,
                            text_position='top center')
 
 
@@ -140,15 +140,15 @@ def add_horizontal_line_to_figure(fig, price_level, color):
                            color=color,
                            direction='triangle-right',
                            size=marker_size,
-                           text='Price Level ' + str(price_level),
-                           text_position='top center')
+                           text=price_level,
+                           text_position='middle left')
 
 
 
 def add_order_levels_to_figure(fig, delta, num_of_layers):
     starting_price = get_starting_point()[1]
     for i in range(1, num_of_layers + 1):
-        add_buy_line_to_figure(fig=fig, height=starting_price + i * delta)
+        # add_buy_line_to_figure(fig=fig, height=starting_price + i * delta)
         add_sell_line_to_figure(fig=fig, height=starting_price - i * delta)
 
 
