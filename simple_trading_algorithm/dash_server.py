@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import time
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -23,11 +21,11 @@ app.layout = html.Div(children=[
     dcc.Interval(
         id='simulation-step-interval',
         disabled=True,
-        interval=1000,
+        interval=300,
         max_intervals=9
     ),
 
-    html.Button('Start Simulation', id='start-simulation-button'),
+    html.Button(children='Start Simulation', id='start-simulation-button'),
     html.Div(id='my-div'),
     dcc.Graph(
         id='candlestick-graph',
@@ -60,22 +58,25 @@ def on_start_simulation_click(n_intervals):
 
 
 @app.callback(
-    Output(component_id='simulation-step-interval', component_property='disabled'),
     [
-        Input('start-simulation-button', 'n_clicks')
+        Output(component_id='simulation-step-interval', component_property='disabled'),
+        Output(component_id='start-simulation-button', component_property='children')
+    ],
+    [
+        Input('start-simulation-button', 'n_clicks'),
     ]
 )
 def on_start_simulation_click(n_clicks):
     print('Start simulation callback invoked')
     if n_clicks is not None and n_clicks == 1:
         print('Starting the simulation')
-        return False
+        return [False, 'Restart Simulation']
     elif n_clicks is None:
         print('Page just loaded for the first time. Waiting for first button click')
-        return True
+        return [True, 'Start Simulation']
     else:
         print('Simulation was already executed. Not running a new simulation')
-        return True
+        return [True, 'Start Simulation']
 
 
 if __name__ == '__main__':
