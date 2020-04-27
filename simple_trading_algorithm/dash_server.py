@@ -21,7 +21,7 @@ app.layout = html.Div(children=[
     dcc.Interval(
         id='simulation-step-interval',
         disabled=True,
-        interval=300,
+        interval=500,
         max_intervals=9
     ),
 
@@ -43,7 +43,7 @@ app.layout = html.Div(children=[
         Input('simulation-step-interval', 'n_intervals')
     ]
 )
-def on_start_simulation_click(n_intervals):
+def simulation_step(n_intervals):
     print('Interval callback invoked')
     if n_intervals is not None and 10 > n_intervals > 0:
         print('Running a step {} out of 9 of simulation'.format(n_intervals))
