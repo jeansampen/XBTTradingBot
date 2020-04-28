@@ -74,7 +74,7 @@ class Optimiser:
                 new_buy_order = BuyOrder(price=sell_order.price - (2 * Optimiser.LEVEL_INTERVAL),
                                          order_size=Optimiser.ORDER_SIZE,
                                          start_timestamp=current_timestamp)
-                self.sell_orders.append(new_buy_order)
+                self.buy_orders.append(new_buy_order)
                 self.plot_manager.add_buy_line(new_buy_order.price)
                 orders_to_remove.append(sell_order)
 
