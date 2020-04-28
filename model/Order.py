@@ -17,3 +17,7 @@ class Order:
         Start Time = {}, 
         State = {}
         '''.format(self.price, self.order_size, self.start_timestamp, self.state)
+
+    def close_order(self, closing_timestamp):
+        self.end_timestamp = closing_timestamp
+        self.state = OrderState.CLOSED

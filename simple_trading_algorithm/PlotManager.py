@@ -27,7 +27,7 @@ class PlotManager:
     def __init__(self, data_manager):
         self.data_manager: DataManager = data_manager
         self.fig = get_figure(self.data_manager)
-        self.marker_size = 10
+        self.marker_size = 30
         self.price_offset = 10
         self.time_offset = datetime.timedelta(minutes=5)
         self.line_width = 2
@@ -113,8 +113,8 @@ class PlotManager:
                 )
             ))
 
-        startin_timestamp = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[0]
-        self.add_triangle(position_x=startin_timestamp - self.time_offset,
+        starting_timestamp = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[0]
+        self.add_triangle(position_x=starting_timestamp - self.time_offset,
                           position_y=price_level,
                           color=color,
                           direction='triangle-right',
