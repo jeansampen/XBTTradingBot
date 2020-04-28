@@ -24,10 +24,14 @@ class Optimiser:
         return
 
     def init_buy_orders(self):
+
         [start_timestamp, start_price] = self.data_manager.get_starting_point()
         for i in range(1, Optimiser.NUM_OF_BUY_LEVELS + 1):
             buy_order = BuyOrder(start_price - i * Optimiser.LEVEL_INTERVAL, Optimiser.ORDER_SIZE, start_timestamp)
+            self.plot_manager.add_buy_line(buy_order.price)
             self.buy_orders.append(buy_order)
 
+        self.plot_manager.add_starting_point_triangle()
         for order in self.buy_orders:
             print(str(order))
+
