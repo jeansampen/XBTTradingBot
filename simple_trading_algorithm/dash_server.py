@@ -9,7 +9,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-figure = init_figure()
+optimiser = Optimiser()
 
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
@@ -29,7 +29,7 @@ app.layout = html.Div(children=[
     html.Div(id='my-div'),
     dcc.Graph(
         id='candlestick-graph',
-        figure=figure,
+        figure=optimiser.figure,
         style={
             'height': 1500
         }
@@ -45,9 +45,9 @@ app.layout = html.Div(children=[
 )
 def simulation_step(n_intervals):
     print('Iteration #{}'.format(n_intervals))
-    run_algorithm_step(figure, n_intervals)
+    optimiser.run_algorithm_step(n_intervals)
 
-    return figure
+    return optimiser.figure
 
 
 @app.callback(
