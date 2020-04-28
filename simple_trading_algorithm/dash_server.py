@@ -22,7 +22,7 @@ app.layout = html.Div(children=[
         id='simulation-step-interval',
         disabled=True,
         interval=500,
-        max_intervals=9
+        max_intervals=1000
     ),
 
     html.Button(children='Start Simulation', id='start-simulation-button'),
@@ -44,15 +44,8 @@ app.layout = html.Div(children=[
     ]
 )
 def simulation_step(n_intervals):
-    print('Interval callback invoked')
-    if n_intervals is not None and 10 > n_intervals > 0:
-        print('Running a step {} out of 9 of simulation'.format(n_intervals))
-        index = 100 * n_intervals
-        add_buy_triangle_to_figure_for_index(figure, index)
-    elif n_intervals is None:
-        print('This is the initial load. Not executing as we are waiting for a button click')
-    else:
-        print('We have already gone through 9 steps. No more steps included')
+    print('Iteration #{}'.format(n_intervals))
+    run_algorithm_step(figure, n_intervals)
 
     return figure
 

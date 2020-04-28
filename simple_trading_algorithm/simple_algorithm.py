@@ -8,3 +8,6 @@ def init_figure():
     return figure
 
 
+def run_algorithm_step(figure, index):
+    return
+
