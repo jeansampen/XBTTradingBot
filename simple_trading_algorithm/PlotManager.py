@@ -2,6 +2,7 @@ import datetime
 
 import plotly.graph_objects as go
 
+from Enum.PriceType import PriceType
 from simple_trading_algorithm.DataManager import DataManager
 
 
@@ -41,15 +42,15 @@ class PlotManager:
                                       marker=dict(color="blue", size=20)))
 
     def add_sell_triangle_for_index(self, index):
-        [timestamp, price] = self.data_manager.get_data_for_index(index)
+        [timestamp, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.LOW)
         self.add_sell_triangle(timestamp, price)
 
     def add_buy_triangle_for_index(self, index):
-        [timestamp, price] = self.data_manager.get_data_for_index(index)
+        [timestamp, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.LOW)
         self.add_buy_triangle(timestamp, price)
 
     def add_starting_point_triangle(self):
-        [starting_timestamp, starting_price] = self.data_manager.get_starting_point()
+        [starting_timestamp, starting_price] = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)
         self.add_triangle(position_x=starting_timestamp - self.time_offset,
                           position_y=starting_price,
                           color='Blue',
@@ -112,7 +113,7 @@ class PlotManager:
                 )
             ))
 
-        startin_timestamp = self.data_manager.get_starting_point()[0]
+        startin_timestamp = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[0]
         self.add_triangle(position_x=startin_timestamp - self.time_offset,
                           position_y=price_level,
                           color=color,
@@ -121,7 +122,7 @@ class PlotManager:
                           text_position='middle left')
 
     def add_order_levels(self, delta, num_of_layers):
-        starting_price = self.data_manager.get_starting_point()[1]
+        starting_price = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[1]
         for i in range(1, num_of_layers + 1):
             # add_buy_line(fig=fig, height=starting_price + i * delta)
             self.add_sell_line(height=starting_price - i * delta)

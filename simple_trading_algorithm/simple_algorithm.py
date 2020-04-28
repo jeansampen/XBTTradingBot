@@ -1,3 +1,4 @@
+from Enum.PriceType import PriceType
 from model.Buy_Order import BuyOrder
 from simple_trading_algorithm.PlotManager import *
 
@@ -20,13 +21,13 @@ class Optimiser:
 
     def run_algorithm_step(self, index):
         if index is not None and 0 < index < self.data_manager.MAX_INDEX:
-            [x, y] = self.data_manager.get_data_for_index(index)
-            self.plot_manager.move_marker(x, y)
+            [current_timestamp, current_price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.LOW)
+            self.plot_manager.move_marker(current_timestamp, current_price)
         return
 
     def init_buy_orders(self):
 
-        [start_timestamp, start_price] = self.data_manager.get_starting_point()
+        [start_timestamp, start_price] = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)
         for i in range(1, Optimiser.NUM_OF_BUY_LEVELS + 1):
             buy_order = BuyOrder(start_price - i * Optimiser.LEVEL_INTERVAL, Optimiser.ORDER_SIZE, start_timestamp)
             self.plot_manager.add_buy_line(buy_order.price)
