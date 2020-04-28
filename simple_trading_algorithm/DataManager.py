@@ -9,7 +9,7 @@ def get_data(max_index):
 
 
 class DataManager:
-    MAX_INDEX = 20
+    MAX_INDEX = 1000
 
     def __init__(self):
         self.data = get_data(DataManager.MAX_INDEX)

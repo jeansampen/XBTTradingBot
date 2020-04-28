@@ -14,24 +14,10 @@ def get_figure(data_manager):
 
     static_layout = go.Layout(title='XBT Price in the last 1000 minutes',
                               yaxis_title='XBT Price (USD)',
-                              xaxis_title='Time (minutes)',
-                              updatemenus=[dict(type="buttons",
-                                                buttons=[dict(label="Play",
-                                                              method="animate",
-                                                              args=[None])])])
+                              xaxis_title='Time (minutes)')
 
-    fig: go.Figure = go.Figure(data=[static_candlestick_chart, static_candlestick_chart],
-                               layout=static_layout,
-                               frames=[
-                                   go.Frame(
-                                       data=[go.Scatter(
-                                           x=[data_manager.get_data_for_index(k)[0]],
-                                           y=[data_manager.get_data_for_index(k)[1]],
-                                           mode="markers",
-                                           marker=dict(color="red", size=10))])
-
-                                   for k in range(10)]
-                               )
+    fig: go.Figure = go.Figure(data=[static_candlestick_chart],
+                               layout=static_layout)
 
     return fig
 
@@ -39,11 +25,20 @@ def get_figure(data_manager):
 class PlotManager:
     def __init__(self, data_manager):
         self.data_manager: DataManager = data_manager
+        self.fig = get_figure(self.data_manager)
         self.marker_size = 10
         self.price_offset = 10
         self.time_offset = datetime.timedelta(minutes=5)
         self.line_width = 2
-        self.fig = get_figure(self.data_manager)
+
+    def move_marker(self, x, y):
+        self.fig.data = [
+            self.fig.data[0]
+        ]
+        self.fig.add_trace(go.Scatter(x=[x],
+                                      y=[y],
+                                      mode="markers",
+                                      marker=dict(color="blue", size=20)))
 
     def add_sell_triangle_for_index(self, index):
         [timestamp, price] = self.data_manager.get_data_for_index(index)

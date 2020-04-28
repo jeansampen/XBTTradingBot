@@ -19,8 +19,9 @@ class Optimiser:
         self.init_buy_orders()
 
     def run_algorithm_step(self, index):
-        current_position = index
-
+        if index is not None and 0 < index < self.data_manager.MAX_INDEX:
+            [x, y] = self.data_manager.get_data_for_index(index)
+            self.plot_manager.move_marker(x, y)
         return
 
     def init_buy_orders(self):
@@ -34,4 +35,3 @@ class Optimiser:
         self.plot_manager.add_starting_point_triangle()
         for order in self.buy_orders:
             print(str(order))
-
