@@ -24,7 +24,7 @@ app.layout = html.Div(children=[
     dcc.Interval(
         id='simulation-step-interval',
         disabled=True,
-        interval=50,
+        interval=30,
         max_intervals=1000
     ),
 

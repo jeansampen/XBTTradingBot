@@ -20,7 +20,7 @@ def get_figure(data_manager):
     fig: go.Figure = go.Figure(data=[static_candlestick_chart],
                                layout=static_layout)
 
-    fig.update_layout(showlegend=False)
+    fig.update_layout(showlegend=False, xaxis_rangeslider_visible=False)
 
     return fig
 
