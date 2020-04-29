@@ -44,7 +44,7 @@ class PlotManager:
         self.fig.add_trace(go.Scatter(x=[x],
                                       y=[y],
                                       mode="markers",
-                                      marker=dict(color="blue", size=5)))
+                                      marker=dict(color="blue", size=3)))
 
     def add_sell_triangle_for_index(self, index):
         [timestamp, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.LOW)

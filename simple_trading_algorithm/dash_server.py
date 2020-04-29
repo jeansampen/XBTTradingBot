@@ -10,6 +10,9 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 optimiser = Optimiser()
+current_price = 0
+current_time = 0
+current_balance = 0
 
 app.layout = html.Div(children=[
     html.H1(children='Hello Dash'),
@@ -26,7 +29,15 @@ app.layout = html.Div(children=[
     ),
 
     html.Button(children='Start Simulation', id='start-simulation-button'),
-    html.Div(id='my-div'),
+    html.Div(style={
+        'fontSize': 20,
+        'fontWeight': 'bold',
+        'textAlign': 'center'
+    }, children=[
+        html.Div(id='time-div', children='Time = '),
+        html.Div(id='price-div', children='Price = '),
+        html.Div(id='balance-div', children='Balance = ')
+    ]),
     dcc.Graph(
         id='candlestick-graph',
         figure=optimiser.figure,
@@ -38,16 +49,23 @@ app.layout = html.Div(children=[
 
 
 @app.callback(
-    Output(component_id='candlestick-graph', component_property='figure'),
+    [
+        Output(component_id='candlestick-graph', component_property='figure'),
+        Output(component_id='time-div', component_property='children'),
+        Output(component_id='price-div', component_property='children'),
+        Output(component_id='balance-div', component_property='children')
+    ],
     [
         Input('simulation-step-interval', 'n_intervals')
     ]
 )
 def simulation_step(n_intervals):
-    print('Iteration #{}'.format(n_intervals))
-    optimiser.run_algorithm_step(n_intervals)
+    global current_balance, current_price, current_time
+    if n_intervals is not None and 0 < n_intervals < optimiser.data_manager.MAX_INDEX:
+        print('Iteration #{}'.format(n_intervals))
+        [current_time, current_price, current_balance] = optimiser.run_algorithm_step(n_intervals)
 
-    return optimiser.figure
+    return [optimiser.figure, 'Time = ' + str(current_time), 'Close Price = ' + str(current_price), 'Balance = ' + str(current_balance)]
 
 
 @app.callback(

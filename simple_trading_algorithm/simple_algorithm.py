@@ -33,10 +33,10 @@ class Optimiser:
             print(str(order))
 
     def run_algorithm_step(self, index):
-        if index is not None and 0 < index < self.data_manager.MAX_INDEX:
-            self.move_marker(index)
-            self.execute_buy_orders(index)
-            self.execute_sell_orders(index)
+        self.move_marker(index)
+        self.execute_buy_orders(index)
+        self.execute_sell_orders(index)
+        return self.calculate_descriptors(index)
 
     def move_marker(self, index):
         [current_timestamp, current_low_price] = self.data_manager.get_data_for_index_and_price_type(index,
@@ -80,3 +80,8 @@ class Optimiser:
 
         for sell_order in orders_to_remove:
             self.sell_orders.remove(sell_order)
+
+    def calculate_descriptors(self, index):
+        [time, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.CLOSE)
+        balance = 0
+        return [time, price, balance]
