@@ -20,26 +20,31 @@ def get_figure(data_manager):
     fig: go.Figure = go.Figure(data=[static_candlestick_chart],
                                layout=static_layout)
 
+    fig.update_layout(showlegend=False)
+
     return fig
 
 
 class PlotManager:
+    SUPPORT_MARKER_SIZE = 10
+    MAIN_MARKER_SIZE = 20
+    PRICE_OFFSET = 10
+    TIME_OFFSET = datetime.timedelta(minutes=5)
+    LINE_WIDTH = 2
+
+
     def __init__(self, data_manager):
         self.data_manager: DataManager = data_manager
         self.fig = get_figure(self.data_manager)
-        self.marker_size = 30
-        self.price_offset = 10
-        self.time_offset = datetime.timedelta(minutes=5)
-        self.line_width = 2
 
     def move_marker(self, x, y):
-        self.fig.data = [
-            self.fig.data[0]
-        ]
+        # self.fig.data = [
+        #     self.fig.data[0]
+        # ]
         self.fig.add_trace(go.Scatter(x=[x],
                                       y=[y],
                                       mode="markers",
-                                      marker=dict(color="blue", size=20)))
+                                      marker=dict(color="blue", size=5)))
 
     def add_sell_triangle_for_index(self, index):
         [timestamp, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.LOW)
@@ -51,7 +56,7 @@ class PlotManager:
 
     def add_starting_point_triangle(self):
         [starting_timestamp, starting_price] = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)
-        self.add_triangle(position_x=starting_timestamp - self.time_offset,
+        self.add_triangle(position_x=starting_timestamp - PlotManager.TIME_OFFSET,
                           position_y=starting_price,
                           color='Blue',
                           direction='triangle-right',
@@ -60,21 +65,23 @@ class PlotManager:
 
     def add_sell_triangle(self, timestamp, price):
         self.add_triangle(position_x=timestamp,
-                          position_y=price + self.price_offset,
+                          position_y=price + PlotManager.PRICE_OFFSET,
                           color='Red',
                           direction='triangle-down',
                           text='Sell at ' + str(price),
-                          text_position='top center')
+                          text_position='top center',
+                          size=PlotManager.MAIN_MARKER_SIZE)
 
     def add_buy_triangle(self, timestamp, price):
         self.add_triangle(position_x=timestamp,
-                          position_y=price - self.price_offset,
+                          position_y=price - PlotManager.PRICE_OFFSET,
                           color='Green',
                           direction='triangle-up',
                           text='Buy at ' + str(price),
-                          text_position='bottom center')
+                          text_position='bottom center',
+                          size=PlotManager.MAIN_MARKER_SIZE)
 
-    def add_triangle(self, position_x, position_y, color, direction, text, text_position):
+    def add_triangle(self, position_x, position_y, color, direction, text, text_position, size=SUPPORT_MARKER_SIZE):
         self.fig.add_trace(
             go.Scatter(
                 mode='markers+text',
@@ -85,7 +92,7 @@ class PlotManager:
                 marker=dict(
                     symbol=direction,
                     color=color,
-                    size=self.marker_size
+                    size=size
                 ),
                 showlegend=False
             )
@@ -108,13 +115,13 @@ class PlotManager:
                 y1=price_level,
                 line=dict(
                     color=color,
-                    width=self.line_width,
+                    width=PlotManager.LINE_WIDTH,
                     dash='dashdot'
                 )
             ))
 
         starting_timestamp = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[0]
-        self.add_triangle(position_x=starting_timestamp - self.time_offset,
+        self.add_triangle(position_x=starting_timestamp - PlotManager.TIME_OFFSET,
                           position_y=price_level,
                           color=color,
                           direction='triangle-right',
