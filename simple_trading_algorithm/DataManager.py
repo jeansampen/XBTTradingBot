@@ -4,7 +4,7 @@ from Enum.PriceType import PriceType
 
 
 def get_data(max_index):
-    df = pd.read_csv('bitmex_api_data/trade_bucketed.csv')[:max_index]
+    df = pd.read_csv('../bitmex_api_data/trade_bucketed.csv')[:max_index]
     df['timestamp'] = df['timestamp'].map(pd.to_datetime)
     return df
 
