@@ -17,6 +17,7 @@ class Optimiser:
     LEVEL_INTERVAL = 10
     ORDER_SIZE = 20
     NUM_OF_BUY_LEVELS = 10
+    MOVING_MARKER_ID = 'MOVING_MARKER_ID'
 
     def __init__(self):
         self.data_manager = DataManager()
@@ -54,7 +55,7 @@ class Optimiser:
     def move_marker(self, index):
         [current_timestamp, current_low_price] = self.data_manager.get_data_for_index_and_price_type(index,
                                                                                                      PriceType.LOW)
-        self.plot_manager.move_marker(current_timestamp, current_low_price)
+        self.plot_manager.move_marker(current_timestamp, current_low_price, Optimiser.MOVING_MARKER_ID)
 
     def execute_buy_orders(self, index):
         [current_timestamp, current_low_price] = self.data_manager.get_data_for_index_and_price_type(index,

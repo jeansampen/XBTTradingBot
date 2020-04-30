@@ -37,15 +37,12 @@ class PlotManager:
         self.data_manager: DataManager = data_manager
         self.fig = get_figure(self.data_manager)
 
-    def move_marker(self, x, y):
-        # self.fig.data = [
-        #     self.fig.data[1]
-        # ]
-        # self.fig.data.remove(self.fig.data[0])
-
+    def move_marker(self, x, y, marker_id):
+        self.remove_marker_by_id(marker_id)
         self.fig.add_trace(go.Scatter(x=[x],
                                       y=[y],
                                       mode="markers",
+                                      ids=[marker_id],
                                       marker=dict(color="blue", size=3)))
 
     def add_sell_triangle_for_index(self, index):
