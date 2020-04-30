@@ -132,8 +132,9 @@ class PlotManager:
                         text=height,
                         text_position='middle left', )
 
-    def add_order_levels(self, delta, num_of_layers):
-        starting_price = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[1]
-        for i in range(1, num_of_layers + 1):
-            # add_buy_line(fig=fig, height=starting_price + i * delta)
-            self.add_sell_line(height=starting_price - i * delta)
+
+    def remove_line_by_id(self, line_id):
+        self.fig.layout.shapes = [l for l in self.fig.layout.shapes if not (l.templateitemname == line_id)]
+
+    def remove_marker_by_id(self, marker_id):
+        self.fig.data = [m for m in self.fig.data if not (isinstance(m, go.Scatter) and m.ids[0] == marker_id)]

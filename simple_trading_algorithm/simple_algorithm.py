@@ -63,8 +63,7 @@ class Optimiser:
 
         for buy_order in self.buy_orders:
             if current_low_price < buy_order.price:
-                buy_order.close_order(current_timestamp)
-                self.plot_manager.add_buy_triangle(current_timestamp, buy_order.price)
+                self.close_order(buy_order, current_timestamp)
                 new_sell_order = self.generate_new_order(price=buy_order.price + (2 * Optimiser.LEVEL_INTERVAL),
                                                          start_timestamp=current_timestamp,
                                                          order_type=OrderType.SELL)
@@ -82,8 +81,7 @@ class Optimiser:
 
         for sell_order in self.sell_orders:
             if current_high_price > sell_order.price:
-                sell_order.close_order(current_timestamp)
-                self.plot_manager.add_sell_triangle(current_timestamp, sell_order.price)
+                self.close_order(sell_order, current_timestamp)
                 new_buy_order = self.generate_new_order(price=sell_order.price - (2 * Optimiser.LEVEL_INTERVAL),
                                                         start_timestamp=current_timestamp,
                                                         order_type=OrderType.BUY)
@@ -92,6 +90,16 @@ class Optimiser:
 
         for sell_order in orders_to_remove:
             self.sell_orders.remove(sell_order)
+
+    def close_order(self, order: Order, closing_timestamp):
+        order.close_order(closing_timestamp)
+        self.plot_manager.remove_line_by_id(order.line_id)
+        if order.order_type == OrderType.BUY:
+            self.plot_manager.add_buy_triangle(closing_timestamp, order.price)
+        else:
+            self.plot_manager.add_sell_triangle(closing_timestamp, order.price)
+
+
 
     def calculate_descriptors(self, index):
         [time, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.CLOSE)
