@@ -39,8 +39,10 @@ class PlotManager:
 
     def move_marker(self, x, y):
         # self.fig.data = [
-        #     self.fig.data[0]
+        #     self.fig.data[1]
         # ]
+        # self.fig.data.remove(self.fig.data[0])
+
         self.fig.add_trace(go.Scatter(x=[x],
                                       y=[y],
                                       mode="markers",
@@ -94,7 +96,8 @@ class PlotManager:
                     color=color,
                     size=size
                 ),
-                showlegend=False
+                showlegend=False,
+                ids=[str(position_x) + str(position_y)]
             )
         )
 
@@ -106,7 +109,6 @@ class PlotManager:
 
     def add_horizontal_line(self, price_level, color):
         self.fig.add_shape(
-            # Line Vertical
             dict(
                 type="line",
                 x0=self.data_manager.start_index,
@@ -117,7 +119,9 @@ class PlotManager:
                     color=color,
                     width=PlotManager.LINE_WIDTH,
                     dash='dashdot'
-                )
+                ),
+                templateitemname=str(price_level),
+                visible=True
             ))
 
         starting_timestamp = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[0]
@@ -126,7 +130,7 @@ class PlotManager:
                           color=color,
                           direction='triangle-right',
                           text=price_level,
-                          text_position='middle left')
+                          text_position='middle left',)
 
     def add_order_levels(self, delta, num_of_layers):
         starting_price = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)[1]

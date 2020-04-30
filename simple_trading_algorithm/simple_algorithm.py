@@ -33,7 +33,7 @@ class Optimiser:
             print(str(order))
 
     def run_algorithm_step(self, index):
-        # self.move_marker(index)
+        self.move_marker(index)
         self.execute_buy_orders(index)
         self.execute_sell_orders(index)
         return self.calculate_descriptors(index)
