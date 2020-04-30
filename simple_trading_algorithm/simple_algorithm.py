@@ -13,9 +13,9 @@ def generateId(stringLength=12):
 
 class Optimiser:
     CURRENT_POSITION = 0
-    CURRENT_BALANCE = 2000
-    LEVEL_INTERVAL = 10
-    ORDER_SIZE = 20
+    INITIAL_BALANCE = 2000
+    LEVEL_INTERVAL = 5
+    ORDER_SIZE = 200
     NUM_OF_BUY_LEVELS = 10
     MOVING_MARKER_ID = 'MOVING_MARKER_ID'
 
@@ -25,6 +25,7 @@ class Optimiser:
         self.sell_orders: list = []
         self.plot_manager: PlotManager = PlotManager(self.data_manager)
         self.figure = self.plot_manager.fig
+        self.balance = Optimiser.INITIAL_BALANCE
 
         self.init_buy_orders()
 
@@ -99,10 +100,11 @@ class Optimiser:
             self.plot_manager.add_buy_triangle(closing_timestamp, order.price)
         else:
             self.plot_manager.add_sell_triangle(closing_timestamp, order.price)
+            diff = 2 * Optimiser.LEVEL_INTERVAL
+            self.balance += (Optimiser.ORDER_SIZE / (order.price - diff)) * diff
 
 
 
     def calculate_descriptors(self, index):
         [time, price] = self.data_manager.get_data_for_index_and_price_type(index, PriceType.CLOSE)
-        balance = 0
-        return [time, price, balance]
+        return [time, price, self.balance]
