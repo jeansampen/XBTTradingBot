@@ -1,7 +1,14 @@
+from Enum.OrderType import OrderType
 from Enum.PriceType import PriceType
-from model.Buy_Order import BuyOrder
-from model.Sell_Order import SellOrder
+from model.Order import Order
 from simple_trading_algorithm.PlotManager import *
+import random
+import string
+
+
+def generateId(stringLength=12):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
 
 
 class Optimiser:
@@ -20,17 +27,23 @@ class Optimiser:
 
         self.init_buy_orders()
 
-    def init_buy_orders(self):
+    def generate_new_order(self, price: float, start_timestamp: datetime, order_type: OrderType):
+        new_line_id = generateId()
+        buy_order = Order(price, Optimiser.ORDER_SIZE, start_timestamp, new_line_id, order_type)
+        if order_type == OrderType.BUY:
+            self.plot_manager.add_buy_line(buy_order.price, new_line_id)
+        else:
+            self.plot_manager.add_sell_line(buy_order.price, new_line_id)
+        return buy_order
 
+    def init_buy_orders(self):
         [start_timestamp, start_price] = self.data_manager.get_starting_point_for_price_type(PriceType.LOW)
         for i in range(1, Optimiser.NUM_OF_BUY_LEVELS + 1):
-            buy_order = BuyOrder(start_price - i * Optimiser.LEVEL_INTERVAL, Optimiser.ORDER_SIZE, start_timestamp)
-            self.plot_manager.add_buy_line(buy_order.price)
+            buy_order = self.generate_new_order(start_price - i * Optimiser.LEVEL_INTERVAL, start_timestamp,
+                                                OrderType.BUY)
             self.buy_orders.append(buy_order)
 
         self.plot_manager.add_starting_point_triangle()
-        for order in self.buy_orders:
-            print(str(order))
 
     def run_algorithm_step(self, index):
         self.move_marker(index)
@@ -52,11 +65,11 @@ class Optimiser:
             if current_low_price < buy_order.price:
                 buy_order.close_order(current_timestamp)
                 self.plot_manager.add_buy_triangle(current_timestamp, buy_order.price)
-                new_sell_order = SellOrder(price=buy_order.price + (2 * Optimiser.LEVEL_INTERVAL),
-                                           order_size=Optimiser.ORDER_SIZE,
-                                           start_timestamp=current_timestamp)
+                new_sell_order = self.generate_new_order(price=buy_order.price + (2 * Optimiser.LEVEL_INTERVAL),
+                                                         start_timestamp=current_timestamp,
+                                                         order_type=OrderType.SELL)
+
                 self.sell_orders.append(new_sell_order)
-                self.plot_manager.add_sell_line(new_sell_order.price)
                 orders_to_remove.append(buy_order)
 
         for buy_order in orders_to_remove:
@@ -71,11 +84,10 @@ class Optimiser:
             if current_high_price > sell_order.price:
                 sell_order.close_order(current_timestamp)
                 self.plot_manager.add_sell_triangle(current_timestamp, sell_order.price)
-                new_buy_order = BuyOrder(price=sell_order.price - (2 * Optimiser.LEVEL_INTERVAL),
-                                         order_size=Optimiser.ORDER_SIZE,
-                                         start_timestamp=current_timestamp)
+                new_buy_order = self.generate_new_order(price=sell_order.price - (2 * Optimiser.LEVEL_INTERVAL),
+                                                        start_timestamp=current_timestamp,
+                                                        order_type=OrderType.BUY)
                 self.buy_orders.append(new_buy_order)
-                self.plot_manager.add_buy_line(new_buy_order.price)
                 orders_to_remove.append(sell_order)
 
         for sell_order in orders_to_remove:
