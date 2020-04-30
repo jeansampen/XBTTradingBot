@@ -69,6 +69,66 @@ marker_id = 'marker3'
 figure.data = [m for m in figure.data if not (isinstance(m, go.Scatter) and m.ids[0] == marker_id)]
 
 
+figure.add_shape(
+            dict(
+                type="line",
+                x0=x1,
+                y0=y1,
+                x1=x2,
+                y1=y1,
+                line=dict(
+                    color='Blue',
+                    width=5,
+                    dash='dashdot'
+                ),
+                templateitemname='line1',
+                visible=True
+            ))
+
+
+figure.add_shape(
+            dict(
+                type="line",
+                x0=x2,
+                y0=y2,
+                x1=x3,
+                y1=y2,
+                line=dict(
+                    color='Red',
+                    width=5,
+                    dash='dashdot'
+                ),
+                templateitemname='line2',
+                visible=True
+            ))
+
+
+
+figure.add_shape(
+            dict(
+                type="line",
+                x0=x3,
+                y0=y3,
+                x1=x1,
+                y1=y3,
+                line=dict(
+                    color='Green',
+                    width=5,
+                    dash='dashdot'
+                ),
+                templateitemname='line3',
+                visible=True,
+            ))
+
+
+
+
+line_id = 'line8'
+
+figure.layout.shapes = [l for l in figure.layout.shapes if not (l.templateitemname == line_id)]
+
+
+
 print('Hello')
 figure.show()
 
